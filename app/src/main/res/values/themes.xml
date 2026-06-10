@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 基础主题，Compose 会接管实际样式 -->
+    <style name="Theme.AppUsageTracker" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
