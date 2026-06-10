@@ -106,17 +106,6 @@ app/src/main/java/com/appspy/
 
 ---
 
-## v1 不做的事
-
-- 超时提醒 / 使用限制
-- 数据导出（CSV / JSON）
-- iOS / 桌面端
-- 云同步 / 账号
-- 桌面小组件
-- 小时级细粒度图表
-
----
-
 ## License
 
 MIT
