@@ -48,9 +48,12 @@ class TodayViewModel @Inject constructor(
             try {
                 val rawData = repository.getTodayUsageLive()
 
-                // 同时触发落库（不阻塞 UI，异步执行）
+                // 同时触发落库 + 清理旧版误入库的系统组件（不阻塞 UI，异步执行）
                 launch {
-                    try { repository.snapshotDate(LocalDate.now()) } catch (_: Exception) {}
+                    try {
+                        repository.snapshotDate(LocalDate.now())
+                        repository.purgeNonLaunchablePackages()
+                    } catch (_: Exception) {}
                 }
 
                 val sorted = sortList(rawData, _uiState.value.sortMode)

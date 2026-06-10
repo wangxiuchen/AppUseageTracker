@@ -24,4 +24,8 @@ interface AppMetaDao {
 
     @Query("SELECT * FROM app_meta ORDER BY appLabel ASC")
     suspend fun getAll(): List<AppMeta>
+
+    /** 删除指定包名的元数据（清理误入库的系统组件） */
+    @Query("DELETE FROM app_meta WHERE packageName IN (:packages)")
+    suspend fun deleteForPackages(packages: List<String>)
 }

@@ -73,8 +73,11 @@ object UsageStatsHelper {
         // 按包名分组
         val byPackage = rawEvents.groupBy { it.packageName }
 
+        val pm = context.packageManager
         return byPackage.mapNotNull { (pkg, pkgEvents) ->
             if (filterSelf && pkg == context.packageName) return@mapNotNull null
+            // 只统计有桌面启动入口的 app，排除桌面/SystemUI/输入法等系统组件
+            if (pm.getLaunchIntentForPackage(pkg) == null) return@mapNotNull null
 
             val sorted = pkgEvents.sortedBy { it.timeStamp }
             var openCount = 0
@@ -160,6 +163,20 @@ object UsageStatsHelper {
             pm.getApplicationLabel(info).toString()
         } catch (e: PackageManager.NameNotFoundException) {
             packageName  // 已卸载 app 兜底显示包名
+        }
+    }
+
+    /**
+     * 包仍处于安装状态、但没有桌面启动入口 → 视为系统组件而非 app。
+     * 已卸载的包返回 false（保留其历史数据）。
+     */
+    fun isInstalledNonLaunchable(context: Context, packageName: String): Boolean {
+        val pm = context.packageManager
+        return try {
+            pm.getApplicationInfo(packageName, 0)
+            pm.getLaunchIntentForPackage(packageName) == null
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
         }
     }
 

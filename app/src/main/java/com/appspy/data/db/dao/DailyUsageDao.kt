@@ -44,4 +44,8 @@ interface DailyUsageDao {
     /** 查询最近 N 天内有没有某日期的记录（用于补抓） */
     @Query("SELECT DISTINCT date FROM daily_usage WHERE date >= :since ORDER BY date ASC")
     suspend fun getDatesWithDataSince(since: String): List<String>
+
+    /** 删除指定包名的所有记录（清理误入库的系统组件） */
+    @Query("DELETE FROM daily_usage WHERE packageName IN (:packages)")
+    suspend fun deleteForPackages(packages: List<String>)
 }

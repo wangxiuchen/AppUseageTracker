@@ -21,4 +21,8 @@ interface SessionRecordDao {
 
     @Query("DELETE FROM session_record WHERE date = :date")
     suspend fun deleteForDate(date: String)
+
+    /** 删除指定包名的所有会话（清理误入库的系统组件） */
+    @Query("DELETE FROM session_record WHERE packageName IN (:packages)")
+    suspend fun deleteForPackages(packages: List<String>)
 }

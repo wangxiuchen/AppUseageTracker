@@ -106,6 +106,19 @@ class UsageRepository @Inject constructor(
     }
 
     /**
+     * 清理历史上误入库的系统组件数据（桌面、SystemUI、输入法等没有
+     * 桌面启动入口的包）。已卸载 app 的历史数据保留。
+     */
+    suspend fun purgeNonLaunchablePackages() {
+        val garbage = dailyUsageDao.getDistinctPackages()
+            .filter { UsageStatsHelper.isInstalledNonLaunchable(context, it) }
+        if (garbage.isEmpty()) return
+        dailyUsageDao.deleteForPackages(garbage)
+        sessionRecordDao.deleteForPackages(garbage)
+        appMetaDao.deleteForPackages(garbage)
+    }
+
+    /**
      * 检查最近 [lookbackDays] 天内哪些日期没有数据，
      * 如果系统事件还能查到就补抓（防止某天 app 未打开导致漏记）。
      */

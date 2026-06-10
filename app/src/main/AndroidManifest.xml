@@ -17,6 +17,17 @@
 
     <!-- 不需要网络权限 -->
 
+    <!--
+        Android 11+ 包可见性：声明可见「带桌面启动入口的 app」，
+        用于过滤系统组件、获取 app 名称和图标。
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
         android:name=".AppUsageTrackerApp"
         android:allowBackup="false"

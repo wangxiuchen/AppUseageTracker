@@ -29,6 +29,8 @@ class DailySnapshotWorker @AssistedInject constructor(
             usageRepository.snapshotDate(LocalDate.now())
             // 2. 补抓缺口（最多往前 7 天）
             usageRepository.fillGaps(lookbackDays = 7)
+            // 3. 清理历史上误入库的系统组件数据
+            usageRepository.purgeNonLaunchablePackages()
             Result.success()
         } catch (e: Exception) {
             // 失败后最多重试 2 次
